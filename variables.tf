@@ -10,3 +10,7 @@ variable "app_name" {
 variable "bank_name" {
     default = "ACMEBank"
 }
+
+variable "apigateway_name" {
+    default = "ACMEBankApiGateway"
+}
