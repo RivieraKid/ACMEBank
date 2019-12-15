@@ -1,11 +1,20 @@
 import json
 from decimal import *
 import logging
+import math
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    # TODO implement
+    if ( "queryStringParameters" not in event ):
+        print ("Invalid Query")
+        return {
+            'statusCode': 500,
+            'body': json.dumps({
+                'Message': 'Invalid Query'
+            })
+        }
     queryStringParameters = event["queryStringParameters"]
 
     if "Balance" not in queryStringParameters:
@@ -13,7 +22,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 502,
             'body': json.dumps({
-                "Message": "No Balance provided in HTTP call"
+                'Message': "No Balance provided in HTTP call"
             })
         }
 
@@ -35,7 +44,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 502,
             'body': json.dumps({
-                "Message": "Unknown method in HTTP call"
+                'Message': "Unknown method in HTTP call"
             })
         }
 
@@ -44,7 +53,7 @@ def lambda_handler(event, context):
         return {
             'statusCode': 200,
             'body': json.dumps({
-                "Interest": 0
+                'Interest': 0
             })
         }
 
@@ -64,8 +73,8 @@ def lambda_handler(event, context):
         interestRate = 0.025
     else:
         interestRate = 0.03
-    
-    interest = round(balance * interestRate, 2)
+
+    interest = math.ceil(((balance * interestRate) * 100)) / 100
 
     headers = {
             'OriginalBalance': balance,
@@ -73,11 +82,12 @@ def lambda_handler(event, context):
         }
 
     print ("Response Headers: " + json.dumps(headers))
+    print ("Interest to be paid: " + str(interest))
 
     return {
         'statusCode': 200,
         'body': json.dumps({
-            "interest": interest
+            'interest': interest
         }),
         'headers': headers
     }
