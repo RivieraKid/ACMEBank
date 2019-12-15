@@ -1,5 +1,5 @@
-resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
+resource "aws_iam_role" "iam_for_interest_lambda" {
+  name = "iam_for_interest_lambda"
 
   assume_role_policy = <<EOF
 {
@@ -31,7 +31,7 @@ resource "null_resource" "zipLambda" {
 resource "aws_lambda_function" "lambda_interest_calculator" {
   filename      = "lambda/GetInterest/python/calculate_interest.zip"
   function_name = "${var.bank_name}InterestCalc"
-  role          = aws_iam_role.iam_for_lambda.arn
+  role          = aws_iam_role.iam_for_interest_lambda.arn
   handler       = "calculate_interest.lambda_handler"
 
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
@@ -78,6 +78,6 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_logs" {
-  role = aws_iam_role.iam_for_lambda.name
+  role = aws_iam_role.iam_for_interest_lambda.name
   policy_arn = aws_iam_policy.lambda_logging.arn
 }
