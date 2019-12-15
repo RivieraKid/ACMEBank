@@ -42,3 +42,15 @@ resource "aws_lambda_permission" "apigw_lambda" {
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
   source_arn = "${aws_api_gateway_rest_api.ACMEBankAPIGateway.execution_arn}/*/*/*"
 }
+
+resource "aws_api_gateway_deployment" "ACMEBankInterestDeployment" {
+  depends_on = [ aws_api_gateway_integration.GetInterestLambdaIntegration]
+
+  rest_api_id = aws_api_gateway_rest_api.ACMEBankAPIGateway.id
+  stage_name = "uat"
+
+}
+
+output "Public-API-Endpoint-URL" {
+  value = "${aws_api_gateway_deployment.ACMEBankInterestDeployment.invoke_url}/getinterest"
+}
