@@ -7,6 +7,16 @@ logger.setLevel(logging.INFO)
 def lambda_handler(event, context):
     # TODO implement
     queryStringParameters = event["queryStringParameters"]
+
+    if "Balance" not in queryStringParameters:
+        print ("No Balance provided in HTTP call")
+        return {
+            'statusCode': 502,
+            'body': json.dumps({
+                "Message": "No Balance provided in HTTP call"
+            })
+        }
+
     balance = float(queryStringParameters["Balance"])
     resource = event["resource"]
     httpMethod = event["httpMethod"]
